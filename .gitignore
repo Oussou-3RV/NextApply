@@ -1,0 +1,19 @@
+# Secrets
+.env
+.env.*
+!.env.example
+application-local.properties
+
+# Java / Maven
+target/
+*.class
+
+# Node
+node_modules/
+dist/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+.DS_Store
