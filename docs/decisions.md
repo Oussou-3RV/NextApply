@@ -1,0 +1,3 @@
+- Outil personnel plutôt que SaaS public : moins de coûts et de contraintes légales, et un projet que j'utilise vraiment.
+- Collecte des offres par une extension Chrome déclenchée par moi, plutôt que du scraping serveur : plus fiable et plus respectueux des conditions des sites.
+- Exécution en local d'abord : le déploiement viendra seulement s'il est utile.
