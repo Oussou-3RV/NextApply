@@ -1,4 +1,4 @@
-package com.nextApply.backend.config;
+package com.nextapply.backend.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

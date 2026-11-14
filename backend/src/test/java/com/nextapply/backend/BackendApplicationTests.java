@@ -1,4 +1,4 @@
-package com.nextApply.backend;
+package com.nextapply.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.nextApply.backend.security;
+package com.nextapply.backend.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
