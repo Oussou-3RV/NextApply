@@ -13,4 +13,10 @@ public interface SkillRepository extends JpaRepository<Skill, UUID> {
     List<Skill> findByUserIdOrderByNameAsc(UUID userId);
 
     Optional<Skill> findByIdAndUserId(UUID id, UUID userId);
+
+    // Doublons (sans tenir compte de la casse), comme l'index uq_skills_user_name
+    boolean existsByUserIdAndNameIgnoreCase(UUID userId, String name);
+
+    // Pareil, mais en ignorant la compétence qu'on est en train de modifier
+    boolean existsByUserIdAndNameIgnoreCaseAndIdNot(UUID userId, String name, UUID id);
 }
