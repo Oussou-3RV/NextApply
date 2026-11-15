@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/api/profile")
 public class ProfileController {
@@ -26,18 +24,13 @@ public class ProfileController {
 
     @GetMapping
     public ProfileResponse getProfile(@AuthenticationPrincipal Jwt jwt) {
-        return profileService.getProfile(userId(jwt));
+        return profileService.getProfile(JwtUser.id(jwt));
     }
 
     // @Valid : Spring vérifie les contraintes du DTO et répond 400 si elles échouent
     @PutMapping
     public ProfileResponse updateProfile(@AuthenticationPrincipal Jwt jwt,
                                          @Valid @RequestBody ProfileRequest request) {
-        return profileService.updateProfile(userId(jwt), request);
-    }
-
-    // Le userId vient TOUJOURS du jeton (claim sub), jamais du corps de la requête
-    private static UUID userId(Jwt jwt) {
-        return UUID.fromString(jwt.getSubject());
+        return profileService.updateProfile(JwtUser.id(jwt), request);
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+import static com.nextapply.backend.service.TextCleaner.clean;
+
 @Service
 public class ProfileService {
 
@@ -49,14 +51,5 @@ public class ProfileService {
         // createdAt et updatedAt soient remplis dans la réponse
         Profile saved = profileRepository.saveAndFlush(profile);
         return ProfileResponse.from(saved);
-    }
-
-    // Les formulaires envoient "" pour un champ vide : on enregistre null à la place
-    private static String clean(String value) {
-        if (value == null) {
-            return null;
-        }
-        String trimmed = value.trim();
-        return trimmed.isEmpty() ? null : trimmed;
     }
 }
