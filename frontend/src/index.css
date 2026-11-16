@@ -1,0 +1,213 @@
+@import './styles/tokens.css';
+
+/* Pas d'animation : docs/design.md n'autorise qu'un seul effet (la ligne « Copié »
+   de la fiche d'offre). Les changements d'état (survol, onglet) sont instantanés. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--police);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--bleu);
+  background: var(--blanc);
+}
+
+h1, h2, h3, p { margin: 0; }
+img, svg { display: block; }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+/* Focus clavier : contour rouge de 3 px, décalé de 3 px */
+:focus-visible { outline: 3px solid var(--rouge); outline-offset: 3px; }
+
+/* ---------- Typographie ---------- */
+.titre-page {
+  font-size: clamp(38px, 6vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.titre-section {
+  font-size: clamp(22px, 3vw, 26px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+.chapeau {
+  margin-top: 16px;
+  max-width: 60ch;
+  font-size: 17px;
+  color: var(--bleu-secondaire);
+}
+.secondaire { color: var(--bleu-secondaire); }
+.erreur { color: var(--rouge); }
+
+/* ---------- Logo ---------- */
+.logo { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; }
+.logo img { width: 40px; height: 40px; }
+.logo-nom { font-size: 24px; font-weight: 800; letter-spacing: -0.04em; color: var(--bleu); }
+.logo-nom span { color: var(--rouge); }
+
+/* ---------- Liens et boutons ---------- */
+a { color: var(--bleu); }
+.lien {
+  padding: 0; border: 0; background: none; cursor: pointer;
+  color: var(--bleu); text-decoration: underline; text-underline-offset: 3px;
+}
+.lien:hover { text-decoration-thickness: 2px; }
+
+.bouton {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 52px; padding: 0 30px;
+  border: 2px solid var(--bleu); border-radius: 0;
+  background: var(--bleu); color: var(--blanc);
+  font-weight: 700; cursor: pointer; text-decoration: none;
+}
+.bouton:disabled { opacity: 0.55; cursor: default; }
+.bouton--contour { background: var(--blanc); color: var(--bleu); }
+.bouton--contour:hover:not(:disabled) { background: var(--bleu-pale); }
+.boutons { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+
+/* ---------- Champs : seulement un trait dessous ---------- */
+.champ { display: flex; flex-direction: column; gap: 6px; }
+.champ label { font-size: 15px; font-weight: 500; color: var(--bleu-secondaire); }
+.champ input, .champ select, .champ textarea {
+  width: 100%;
+  padding: 8px 0;
+  border: 0; border-bottom: 2px solid var(--bleu); border-radius: 0;
+  background: transparent;
+  font-size: 17px; font-weight: 500;
+}
+.champ textarea { resize: vertical; min-height: 120px; line-height: 1.5; }
+.champ select { appearance: none; cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, var(--bleu) 50%),
+                    linear-gradient(135deg, var(--bleu) 50%, transparent 50%);
+  background-position: calc(100% - 14px) 55%, calc(100% - 8px) 55%;
+  background-size: 6px 6px; background-repeat: no-repeat; }
+.champ input:focus-visible, .champ select:focus-visible, .champ textarea:focus-visible {
+  outline: none; border-bottom-color: var(--rouge);
+}
+.champ [aria-invalid='true'] { border-bottom-color: var(--rouge); }
+.champ-erreur { font-size: 14px; color: var(--rouge); }
+.case { display: flex; align-items: center; gap: 12px; font-weight: 500; cursor: pointer; }
+.case input { width: 20px; height: 20px; accent-color: var(--bleu); }
+
+.grille-champs {
+  display: grid; gap: 28px 40px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+}
+
+/* ---------- Mise en page ---------- */
+.conteneur { width: 100%; max-width: var(--conteneur); margin: 0 auto; padding: 0 var(--marge); }
+
+.entete { border-bottom: 1px solid var(--bleu-ligne); }
+.entete-interieur {
+  display: flex; align-items: center; gap: 48px;
+  min-height: 74px; padding: 0 var(--marge);
+}
+.entete .logo img { width: 32px; height: 32px; }
+.entete .logo-nom { font-size: 20px; }
+.navigation { display: flex; gap: 32px; margin-right: auto; }
+.navigation a {
+  padding: 6px 0; text-decoration: none; font-weight: 500;
+  border-bottom: 3px solid transparent;
+}
+.navigation a[aria-current='page'] { font-weight: 700; border-bottom-color: var(--bleu); }
+
+.page { padding-top: 56px; padding-bottom: 96px; }
+
+/* ---------- Onglets : texte, trait de 3 px sous l'actif ---------- */
+.onglets { display: flex; flex-wrap: wrap; gap: 12px 32px; margin-top: 48px; }
+.onglet {
+  padding: 6px 0; border: 0; border-bottom: 3px solid transparent; background: none;
+  color: var(--bleu-secondaire); font-weight: 500; cursor: pointer;
+}
+.onglet[aria-selected='true'] { color: var(--bleu); font-weight: 700; border-bottom-color: var(--bleu); }
+.onglet .nombre { font-variant-numeric: tabular-nums; }
+.panneau { margin-top: 48px; }
+
+/* ---------- Listes : lignes aérées, filet de 1 px, fond pâle au survol ---------- */
+.liste { list-style: none; margin: 24px -12px 0; padding: 0; }
+.ligne {
+  display: grid; align-items: center; gap: 8px 32px;
+  grid-template-columns: 170px minmax(0, 1fr) minmax(0, 220px) auto;
+  padding: 22px 12px; border-bottom: 1px solid var(--bleu-ligne);
+}
+.ligne:hover { background: var(--bleu-pale); }
+.ligne-titre { font-size: 19px; font-weight: 700; line-height: 1.25; }
+.ligne-actions { display: flex; gap: 20px; justify-content: flex-end; font-size: 16px; }
+.ligne--masquee .ligne-titre { text-decoration: line-through; color: var(--bleu-secondaire); }
+.ligne--simple { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
+
+.vide { margin-top: 24px; color: var(--bleu-secondaire); }
+
+/* ---------- Statuts : la forme dit le statut ---------- */
+.statut { display: inline-flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 500; }
+.marque { flex: none; width: 14px; height: 14px; border-radius: 50%; }
+.marque--nouvelle { background: var(--rouge); }
+.marque--vue { border: 2px solid var(--bleu); }
+.marque--postulee { background: var(--bleu); }
+.marque--masquee { height: 2px; border-radius: 0; background: var(--bleu); }
+
+/* ---------- Bloc de formulaire (ajout / modification) ---------- */
+.formulaire { display: flex; flex-direction: column; gap: 32px; }
+.bloc-edition { margin-top: 32px; padding: 32px; background: var(--bleu-pale); }
+.bloc-edition .titre-liste { font-size: 19px; font-weight: 700; }
+.message { font-size: 15px; }
+
+/* ---------- Connexion ---------- */
+.connexion { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; min-height: 100dvh; }
+.connexion-gauche { display: flex; flex-direction: column; padding: 48px var(--marge); }
+.connexion-formulaire { display: flex; flex-direction: column; gap: 28px; max-width: 380px; margin: auto 0; padding: 48px 0; }
+.connexion-formulaire .titre-page { margin-bottom: 8px; }
+.connexion-droite {
+  display: flex; flex-direction: column; justify-content: center; gap: 36px;
+  padding: 48px var(--marge); background: var(--bleu); color: var(--blanc);
+}
+.connexion-droite .intro { max-width: 30ch; font-size: 17px; color: var(--bleu-clair); }
+.legende { list-style: none; display: flex; flex-direction: column; gap: 30px; margin: 0; padding: 0; }
+.legende li { display: grid; grid-template-columns: 24px 1fr; column-gap: 12px; align-items: center; }
+.legende strong { font-size: 26px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+.legende-texte { grid-column: 2; color: var(--bleu-clair); }
+.legende .marque--nouvelle { background: var(--rouge-clair); }
+.legende .marque--vue { border-color: var(--blanc); }
+.legende .marque--postulee, .legende .marque--masquee { background: var(--blanc); }
+.legende .barre { text-decoration: line-through; text-decoration-thickness: 2px; }
+
+/* ---------- Petits écrans ---------- */
+@media (max-width: 800px) {
+  .connexion { grid-template-columns: 1fr; }
+  .connexion-droite { padding-top: 56px; padding-bottom: 56px; }
+  .entete-interieur { flex-wrap: wrap; gap: 12px 24px; padding-top: 12px; padding-bottom: 12px; }
+  .navigation { order: 3; width: 100%; gap: 24px; }
+  .ligne, .ligne--simple { grid-template-columns: 1fr; }
+  .ligne-actions { justify-content: flex-start; }
+  .bloc-edition { padding: 24px 20px; margin-left: -20px; margin-right: -20px; }
+}
+
+/* Titre de panneau avec son bouton d'ajout à droite */
+.entete-panneau { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+.formulaire > .titre-section:not(:first-child) { margin-top: 24px; }
+
+/* ---------- Icônes ---------- */
+.message { display: flex; align-items: flex-start; gap: 8px; }
+.message svg { flex: none; margin-top: 2px; }
+.message--erreur { color: var(--rouge); }
+.message--succes, .message--info { color: var(--bleu-secondaire); }
+
+/* Bouton réduit à une icône : le nom est donné par aria-label (et title au survol) */
+.bouton-icone {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; padding: 0;
+  border: 0; border-radius: 0; background: transparent; color: var(--bleu); cursor: pointer;
+}
+.bouton-icone:hover { background: var(--blanc); }
+.ligne-actions { gap: 4px; }
+.bouton svg, .lien svg { flex: none; }
+.bouton { gap: 10px; }
+.entete .bouton-icone:hover { background: var(--bleu-pale); }
+.champ-erreur { display: flex; align-items: flex-start; gap: 6px; }
+.champ-erreur svg { flex: none; margin-top: 2px; }

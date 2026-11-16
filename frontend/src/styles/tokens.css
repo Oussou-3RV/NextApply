@@ -1,0 +1,16 @@
+/* Direction visuelle : voir docs/design.md. Toutes les couleurs passent par ces variables. */
+:root {
+  --bleu: #0f2a7a;             /* texte, boutons, titres */
+  --bleu-secondaire: #4a5c84;  /* texte secondaire */
+  --bleu-pale: #edf1fa;        /* surfaces, survol des lignes */
+  --bleu-ligne: #dce3f2;       /* filets de séparation */
+  --bleu-clair: #c9d6f5;       /* texte secondaire sur fond bleu */
+  --rouge: #c8102e;            /* un seul accent : « Nouvelle », focus clavier, erreurs */
+  --rouge-clair: #ff5a68;      /* le rouge, seulement sur fond bleu */
+  --blanc: #ffffff;
+
+  --police: 'Public Sans Variable', system-ui, sans-serif;
+
+  --conteneur: 1152px;
+  --marge: clamp(20px, 5vw, 64px);
+}
