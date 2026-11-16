@@ -14,10 +14,12 @@ Les maquettes de référence sont dans docs/design/. Les respecter fidèlement.
 Le rouge reste rare : s'il est partout, il ne signale plus rien.
 
 ## Typographie
-- Une seule police : Schibsted Grotesk (400, 500, 700, 800).
-- Titre de page : 64 px, graisse 800, interlettrage -0.04em, interligne 1.
-- Titre d'offre : 72 px (page de fiche). Titres de liste : 22 px, graisse 700.
-- Texte : 17 à 20 px. Texte courant aligné à gauche, lignes de moins de 80 caractères.
+- Une seule police : Public Sans (libre, licence OFL), installée par npm
+  (@fontsource-variable/public-sans), sans appel à Google Fonts. Marianne n'est pas
+  utilisée : sa licence la réserve aux sites de l'administration française.
+- Titre de page : 52 px, graisse 800, interlettrage -0.04em, interligne 1.
+- Titre d'offre : 60 px (page de fiche). Titres de section : 26 px. Titres de liste : 19 px, graisse 700.
+- Texte : 16 à 17 px. Texte courant aligné à gauche, lignes de moins de 80 caractères.
 - Chiffres tabulaires pour les scores.
 
 ## Logo
@@ -32,6 +34,9 @@ Le rouge reste rare : s'il est partout, il ne signale plus rien.
 - Listes : lignes aérées avec un filet de 1 px, fond bleu pâle au survol. Pas de cartes.
 - Focus clavier : contour rouge de 3 px, décalé de 3 px.
 - Onglets : texte, trait de 3 px sous l'onglet actif.
+- Icônes : Lucide (lucide-react), au trait, de la couleur du texte. Une icône seule
+  remplace le texte seulement pour une action connue (modifier, supprimer, se déconnecter),
+  avec aria-label et title. Ailleurs, l'icône accompagne le texte (Ajouter, messages d'erreur).
 - Conteneur : largeur max 1152 px, marges clamp(20px, 5vw, 64px).
 
 ## Statuts (la forme dit le statut, pas la couleur seule)

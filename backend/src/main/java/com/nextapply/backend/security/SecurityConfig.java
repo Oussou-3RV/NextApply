@@ -15,6 +15,10 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                // Utilise le bean CorsConfigurationSource de CorsConfig. Le filtre CORS passe
+                // avant l'authentification : le preflight OPTIONS (envoyé sans jeton) reçoit
+                // les en-têtes CORS au lieu d'un 401
+                .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

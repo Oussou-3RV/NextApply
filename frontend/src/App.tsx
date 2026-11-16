@@ -1,12 +1,19 @@
 import { useEffect, useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
+import AppShell from './components/AppShell'
+import { useRoute } from './lib/router'
 import { supabase } from './lib/supabase'
-import LoginForm from './components/LoginForm'
-import Profile from './components/Profile'
+import ComingSoonPage from './pages/ComingSoonPage'
+import LoginPage from './pages/LoginPage'
+import NewPasswordPage from './pages/NewPasswordPage'
+import ProfilePage from './pages/ProfilePage'
 
 function App() {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
+  // true quand on arrive par le lien « Mot de passe oublié » reçu par courriel
+  const [recovering, setRecovering] = useState(false)
+  const route = useRoute()
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -14,16 +21,34 @@ function App() {
       setLoading(false)
     })
 
-    const { data } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    const { data } = supabase.auth.onAuthStateChange((event, newSession) => {
       setSession(newSession)
+      if (event === 'PASSWORD_RECOVERY') setRecovering(true)
     })
 
     return () => data.subscription.unsubscribe()
   }, [])
 
-  if (loading) return <p>Chargement…</p>
-  
-  return session ? <Profile /> : <LoginForm />
+  if (loading) return <p className="conteneur page secondaire">Chargement…</p>
+  if (recovering) return <NewPasswordPage onDone={() => setRecovering(false)} />
+  if (!session) return <LoginPage />
+
+  return (
+    <AppShell route={route}>
+      {route === 'profil' && <ProfilePage />}
+      {route === 'offres' && (
+        <ComingSoonPage title="Offres">
+          Les offres arrivent à l'étape 4. Tu les ajouteras depuis l'extension Chrome, sur la page
+          de l'offre, et tu verras ici leur statut et leur score.
+        </ComingSoonPage>
+      )}
+      {route === 'apercu' && (
+        <ComingSoonPage title="Aperçu">
+          Le tableau de bord arrive à l'étape 6 : tes candidatures de la semaine et celles à relancer.
+        </ComingSoonPage>
+      )}
+    </AppShell>
+  )
 }
 
 export default App
