@@ -8,6 +8,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.LinkedHashMap;
@@ -35,6 +36,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemDetail problem = ex.getBody();
         problem.setDetail("Certains champs sont invalides");
         problem.setProperty("errors", errors);
+        return handleExceptionInternal(ex, problem, headers, status, request);
+    }
+
+    // Fichier trop gros (spring.servlet.multipart.max-file-size) : Spring renvoie déjà
+    // un 413, on remplace seulement son message anglais par une consigne claire
+    @Override
+    protected ResponseEntity<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex,
+                                                                          HttpHeaders headers,
+                                                                          HttpStatusCode status,
+                                                                          WebRequest request) {
+        ProblemDetail problem = ex.getBody();
+        problem.setDetail("Le fichier dépasse 5 Mo. Enregistre une version plus légère de ton CV, puis réessaie.");
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 }
