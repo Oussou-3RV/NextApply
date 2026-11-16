@@ -1,6 +1,11 @@
 package com.nextapply.backend.controller;
 
+import com.nextapply.backend.dto.CvProposalResponse;
 import com.nextapply.backend.dto.CvTextResponse;
+import com.nextapply.backend.dto.ExperienceRequest;
+import com.nextapply.backend.dto.ProfileRequest;
+import com.nextapply.backend.dto.SkillRequest;
+import com.nextapply.backend.service.CvAnalyzer;
 import com.nextapply.backend.service.CvTextExtractor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,8 +16,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -23,11 +33,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class CvControllerTest {
 
     private final CvTextExtractor cvTextExtractor = mock(CvTextExtractor.class);
+    private final CvAnalyzer cvAnalyzer = mock(CvAnalyzer.class);
     private MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new CvController(cvTextExtractor))
+        mockMvc = MockMvcBuilders.standaloneSetup(new CvController(cvTextExtractor, cvAnalyzer))
                 .setControllerAdvice(new ApiExceptionHandler())
                 .build();
     }
@@ -71,5 +82,35 @@ class CvControllerTest {
     void extract_withoutFile_returns400() throws Exception {
         mockMvc.perform(multipart("/api/cv/extract"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void analyze_returnsTheProposalInTheShapeOfTheProfileApis() throws Exception {
+        when(cvTextExtractor.extract(any())).thenReturn(new CvTextResponse(1, "texte du CV"));
+        when(cvAnalyzer.analyze("texte du CV")).thenReturn(new CvProposalResponse(
+                new ProfileRequest("Camille", "Tremblay", null, null, null, null, null, null, null, null, null),
+                List.of(),
+                List.of(new ExperienceRequest("Acme", "Stagiaire", "stage", null,
+                        LocalDate.of(2024, 5, 1), null, null, null)),
+                List.of(new SkillRequest("Java", "Langage"))));
+
+        mockMvc.perform(multipart("/api/cv/analyze").file(cv(new byte[]{1})))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.profile.firstName").value("Camille"))
+                .andExpect(jsonPath("$.educations").isEmpty())
+                .andExpect(jsonPath("$.experiences[0].startDate").value("2024-05-01"))
+                // la règle @AssertTrue isDateRangeValid() n'apparaît pas comme un champ
+                .andExpect(jsonPath("$.experiences[0].dateRangeValid").doesNotExist())
+                .andExpect(jsonPath("$.skills[0].name").value("Java"));
+    }
+
+    @Test
+    void analyze_notAPdf_neverCallsTheAi() throws Exception {
+        when(cvTextExtractor.extract(any())).thenThrow(new ResponseStatusException(
+                HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Ce fichier n'est pas un PDF. Exporte ton CV en PDF, puis réessaie."));
+
+        mockMvc.perform(multipart("/api/cv/analyze").file(cv(new byte[]{1})))
+                .andExpect(status().isUnsupportedMediaType());
+        verify(cvAnalyzer, never()).analyze(any());
     }
 }

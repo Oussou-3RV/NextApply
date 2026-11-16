@@ -1,0 +1,244 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "educations",
+    "experiences",
+    "skills"
+  ],
+  "properties": {
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "firstName",
+        "lastName",
+        "contactEmail",
+        "phone",
+        "city",
+        "region",
+        "country",
+        "linkedinUrl",
+        "githubUrl",
+        "portfolioUrl",
+        "summary"
+      ],
+      "properties": {
+        "firstName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lastName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "contactEmail": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "phone": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Tel qu'écrit dans le CV"
+        },
+        "city": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "region": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Province, état ou région"
+        },
+        "country": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "linkedinUrl": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Adresse complète du profil LinkedIn"
+        },
+        "githubUrl": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Adresse complète du profil GitHub"
+        },
+        "portfolioUrl": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Site personnel ou portfolio, autre que LinkedIn et GitHub"
+        },
+        "summary": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Le paragraphe de présentation du CV, recopié. null s'il n'y en a pas."
+        }
+      }
+    },
+    "educations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "institution",
+          "program",
+          "level",
+          "startDate",
+          "endDate",
+          "description"
+        ],
+        "properties": {
+          "institution": {
+            "type": "string",
+            "description": "École ou université"
+          },
+          "program": {
+            "type": "string",
+            "description": "Diplôme ou programme suivi"
+          },
+          "level": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Niveau : DEC, baccalauréat, maîtrise, licence, master…"
+          },
+          "startDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Date au format AAAA-MM-JJ. Mois seul connu : le 1er du mois. Année seule : le 1er janvier. null si absente."
+          },
+          "endDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Comme startDate. null si absente ou si c'est en cours (« aujourd'hui », « présent »)."
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Détails utiles (mention, cours, projets), recopiés. null sinon."
+          }
+        }
+      }
+    },
+    "experiences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "company",
+          "title",
+          "kind",
+          "location",
+          "startDate",
+          "endDate",
+          "description"
+        ],
+        "properties": {
+          "company": {
+            "type": "string",
+            "description": "Entreprise ou organisme. Pour un projet : le nom du projet."
+          },
+          "title": {
+            "type": "string",
+            "description": "Poste ou rôle"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "emploi",
+              "stage",
+              "projet",
+              "benevolat"
+            ],
+            "description": "stage pour un stage, projet pour un projet personnel ou scolaire, benevolat pour du bénévolat, emploi sinon"
+          },
+          "location": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Ville ou « À distance »"
+          },
+          "startDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Date au format AAAA-MM-JJ. Mois seul connu : le 1er du mois. Année seule : le 1er janvier. null si absente."
+          },
+          "endDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Comme startDate. null si absente ou si c'est en cours (« aujourd'hui », « présent »)."
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Missions et réalisations, recopiées. null sinon."
+          }
+        }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "category"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Une seule compétence, nom court : Java, SQL, Docker, Anglais"
+          },
+          "category": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Langage, Framework, Base de données, Outil, Langue ou Savoir-être. null si aucune ne convient."
+          }
+        }
+      }
+    }
+  }
+}

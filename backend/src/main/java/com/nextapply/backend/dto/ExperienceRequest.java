@@ -1,5 +1,6 @@
 package com.nextapply.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -24,6 +25,9 @@ public record ExperienceRequest(
         Boolean relevant
 ) {
 
+    // @JsonIgnore : règle de validation seulement, pas un champ à mettre dans le JSON
+    // (ces DTO sont aussi renvoyés par POST /api/cv/analyze)
+    @JsonIgnore
     @AssertTrue(message = "la date de fin doit être après la date de début")
     public boolean isDateRangeValid() {
         return startDate == null || endDate == null || !endDate.isBefore(startDate);

@@ -6,7 +6,7 @@
       API, formulaires React (en local)
 - [ ] **Étape 2 — Import du CV** : téléversement, extraction du texte,
       pré-remplissage du profil par IA avec relecture
-      - [ ] 2.1 Extraction du texte d'un CV PDF (POST /api/cv/extract)
+      - [x] 2.1 Extraction du texte d'un CV PDF (POST /api/cv/extract)
       - [ ] 2.2 Analyse du texte par l'IA : proposition de profil, sans enregistrement
       - [ ] 2.3 Écran de relecture, puis enregistrement par les API du profil
 - [ ] **Étape 3 — Extension Chrome v0** : remplir les formulaires à
