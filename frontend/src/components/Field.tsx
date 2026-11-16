@@ -4,6 +4,7 @@ import type { ChangeEvent } from 'react'
 interface FieldProps {
   label: string
   name: string
+  id?: string // à donner quand le même formulaire apparaît plusieurs fois sur la page
   value: string
   onChange: (name: string, value: string) => void
   error?: string
@@ -16,9 +17,9 @@ interface FieldProps {
 
 // Un champ : libellé au-dessus, un trait dessous, et le message d'erreur du backend
 export default function Field({
-  label, name, value, onChange, error, type = 'text', multiline = false, options, autoComplete, hint,
+  label, name, id: givenId, value, onChange, error, type = 'text', multiline = false, options, autoComplete, hint,
 }: FieldProps) {
-  const id = `champ-${name}`
+  const id = givenId ?? `champ-${name}`
   const errorId = `${id}-erreur`
   const handle = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     onChange(name, e.target.value)
