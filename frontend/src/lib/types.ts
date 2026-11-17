@@ -62,3 +62,19 @@ export interface Skill {
 }
 
 export type SkillInput = Pick<Skill, 'name' | 'category'>
+
+// Proposition de l'IA (POST /api/cv/analyze). Mêmes champs que les saisies,
+// mais tout peut manquer : l'IA n'a pas toujours trouvé l'information.
+export type ProposedEducation = { [K in keyof EducationInput]: string | null }
+export type ProposedExperience = {
+  [K in keyof ExperienceInput]: K extends 'kind' ? ExperienceKind | null
+    : K extends 'relevant' ? boolean | null
+    : string | null
+}
+
+export interface CvProposal {
+  profile: ProfileInput
+  educations: ProposedEducation[]
+  experiences: ProposedExperience[]
+  skills: SkillInput[]
+}

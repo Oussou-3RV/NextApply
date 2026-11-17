@@ -1,5 +1,6 @@
 import { supabase } from './supabase'
 import type {
+  CvProposal,
   Education,
   EducationInput,
   Experience,
@@ -38,15 +39,19 @@ async function request<T>(path: string, options: { method?: string; body?: unkno
   const token = data.session?.access_token
   if (!token) throw new ApiError(401, 'Non connecté')
 
+  // FormData (envoi d'un fichier) : le navigateur écrit lui-même le Content-Type
+  // multipart avec sa « boundary ». Sinon, on envoie du JSON.
+  const isForm = options.body instanceof FormData
   const headers: Record<string, string> = { Authorization: `Bearer ${token}` }
-  if (options.body !== undefined) headers['Content-Type'] = 'application/json'
+  if (options.body !== undefined && !isForm) headers['Content-Type'] = 'application/json'
 
   let response: Response
   try {
     response = await fetch(`${API_URL}${path}`, {
       method: options.method ?? 'GET',
       headers,
-      body: options.body === undefined ? undefined : JSON.stringify(options.body),
+      body: options.body === undefined ? undefined
+        : isForm ? (options.body as FormData) : JSON.stringify(options.body),
     })
   } catch {
     // fetch échoue sans réponse : serveur arrêté, ou requête bloquée par le CORS
@@ -95,6 +100,13 @@ export const api = {
     request<Skill>('/api/skills', { method: 'POST', body: input }),
   deleteSkill: (id: string) =>
     request<void>(`/api/skills/${id}`, { method: 'DELETE' }),
+
+  // Envoie le PDF ; le backend renvoie une proposition, sans rien enregistrer
+  analyzeCv: (file: File) => {
+    const form = new FormData()
+    form.append('file', file)
+    return request<CvProposal>('/api/cv/analyze', { method: 'POST', body: form })
+  },
 }
 
 // Message à afficher pour n'importe quelle erreur attrapée

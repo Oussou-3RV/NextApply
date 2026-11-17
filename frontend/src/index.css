@@ -211,3 +211,24 @@ a { color: var(--bleu); }
 .entete .bouton-icone:hover { background: var(--bleu-pale); }
 .champ-erreur { display: flex; align-items: flex-start; gap: 6px; }
 .champ-erreur svg { flex: none; margin-top: 2px; }
+
+/* ---------- Import du CV ---------- */
+.import-cv { margin-top: 32px; }
+.import-partie { margin-top: 56px; }
+/* Une ligne proposée : la case à cocher à gauche, le contenu à droite */
+.ligne-import {
+  display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 20px; align-items: start;
+  padding: 22px 12px; border-bottom: 1px solid var(--bleu-ligne);
+}
+.ligne-import:hover { background: var(--bleu-pale); }
+.import-case { width: 20px; height: 20px; margin: 4px 0 0; accent-color: var(--bleu); cursor: pointer; }
+.import-contenu { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.import-resume { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.import-note { margin-top: 4px; font-size: 15px; font-weight: 600; }
+.import-contenu .bloc-edition { margin-top: 0; background: var(--blanc); }
+.ligne-import .champ { max-width: 720px; }
+.import-competences {
+  list-style: none; margin: 24px 0 0; padding: 0;
+  display: grid; gap: 16px 40px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+}
+.import-actions { margin-top: 56px; }
