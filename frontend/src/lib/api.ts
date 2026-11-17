@@ -118,3 +118,6 @@ export function errorMessage(error: unknown): string {
 export function fieldErrorsOf(error: unknown): Record<string, string> {
   return error instanceof ApiError ? error.fieldErrors : {}
 }
+
+// Utilisé par lib/offers.ts (les offres ont leur propre fichier)
+export { request }
