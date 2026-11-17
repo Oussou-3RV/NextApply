@@ -8,7 +8,8 @@ import java.util.UUID;
 
 // Une offre, sans son texte complet (inutile dans les listes).
 // experienceFit compare les années exigées aux miennes : inconnu, ok, ecart ou trop.
-// score : compatibilité sur 100, null tant que les compétences ne sont pas analysées.
+// score : compatibilité sur 100, null tant que les compétences ne sont pas analysées
+// (skillsAnalyzed = false, offres ajoutées avant l'étape 5) ou si l'offre n'en cite aucune.
 public record JobOfferResponse(
         UUID id,
         String url,
@@ -19,6 +20,7 @@ public record JobOfferResponse(
         Integer experienceMax,
         String experienceFit,
         Integer score,
+        boolean skillsAnalyzed,
         String status,
         Instant appliedAt,
         Instant createdAt
@@ -35,6 +37,7 @@ public record JobOfferResponse(
                 offer.getExperienceMax(),
                 matcher.experienceFit(offer),
                 matcher.match(offer).score(),
+                offer.getRequiredSkills() != null,
                 offer.getStatus(),
                 offer.getAppliedAt(),
                 offer.getCreatedAt()
