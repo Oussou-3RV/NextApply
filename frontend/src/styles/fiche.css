@@ -1,0 +1,54 @@
+/* Fiche d'une offre (docs/design/Fiche d'une offre.png) */
+.fiche-entreprise { margin-top: 40px; font-size: 20px; color: var(--bleu-secondaire); }
+.titre-offre {
+  margin-top: 8px;
+  max-width: 18ch;
+  font-size: clamp(40px, 7vw, 60px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  overflow-wrap: break-word;
+}
+.fiche-lieu { margin-top: 20px; font-size: 17px; color: var(--bleu-secondaire); }
+
+/* Encadré bleu pâle : expérience et score */
+.encadre { max-width: 880px; margin-top: 48px; padding: 40px; background: var(--bleu-pale); }
+.encadre-titre { font-size: clamp(22px, 3vw, 28px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.2; }
+.encadre-texte { display: flex; flex-direction: column; align-items: flex-start; gap: 16px;
+  max-width: 62ch; margin-top: 20px; font-size: 17px; font-variant-numeric: tabular-nums; }
+.encadre-bouton { margin-top: 4px; }
+
+.fiche-actions { margin-top: 48px; }
+.fiche-consigne { margin-top: 0; }
+
+/* Lignes à copier : un vrai <button> par ligne */
+.lignes-copie { list-style: none; max-width: 880px; margin: 24px 0 0; padding: 0; }
+.ligne-copie {
+  display: grid; grid-template-columns: 220px minmax(0, 1fr) auto; align-items: center; gap: 8px 24px;
+  width: 100%; padding: 20px 16px;
+  border: 0; border-bottom: 1px solid var(--bleu-ligne); border-radius: 0;
+  background: var(--blanc); color: var(--bleu); text-align: left; cursor: pointer;
+}
+.ligne-copie:hover { background: var(--bleu-pale); }
+.ligne-copie-libelle { font-size: 16px; color: var(--bleu-secondaire); }
+.ligne-copie-valeur { font-size: 19px; font-weight: 700; overflow-wrap: anywhere; }
+.ligne-copie-action { font-size: 16px; text-decoration: underline; text-underline-offset: 3px; }
+/* Le seul effet de l'app : la ligne copiée s'inverse pendant 1,4 s, sans transition */
+.ligne-copie--copiee, .ligne-copie--copiee:hover { background: var(--bleu); color: var(--blanc); }
+.ligne-copie--copiee .ligne-copie-libelle { color: var(--bleu-clair); }
+.ligne-copie--copiee .ligne-copie-action { text-decoration: none; font-weight: 700; }
+
+.lettre { max-width: 80ch; min-height: 420px; }
+.texte-offre { max-width: 80ch; white-space: pre-wrap; font-size: 16px; line-height: 1.6; }
+
+/* Texte lu par les lecteurs d'écran seulement */
+.visuellement-cache {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+@media (max-width: 800px) {
+  .encadre { padding: 28px 20px; margin-left: -20px; margin-right: -20px; }
+  .ligne-copie { grid-template-columns: 1fr auto; }
+  .ligne-copie-libelle { grid-column: 1 / -1; }
+}
