@@ -7,9 +7,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -47,6 +50,16 @@ public class JobOffer {
     private String status = NEW;
 
     private Instant appliedAt;
+
+    // Colonne text[] de PostgreSQL : Hibernate la lit et l'écrit comme une liste.
+    // null = compétences pas encore analysées (offres ajoutées avant l'étape 5)
+    @JdbcTypeCode(SqlTypes.ARRAY)
+    @Column(columnDefinition = "text[]")
+    private List<String> requiredSkills;
+
+    private String language; // 'fr' ou 'en'
+    private String coverLetter;
+    private Instant coverLetterUpdatedAt;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -138,6 +151,35 @@ public class JobOffer {
 
     public Instant getAppliedAt() {
         return appliedAt;
+    }
+
+    public List<String> getRequiredSkills() {
+        return requiredSkills;
+    }
+
+    public void setRequiredSkills(List<String> requiredSkills) {
+        this.requiredSkills = requiredSkills;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getCoverLetter() {
+        return coverLetter;
+    }
+
+    public Instant getCoverLetterUpdatedAt() {
+        return coverLetterUpdatedAt;
+    }
+
+    public void changeCoverLetter(String coverLetter, Instant now) {
+        this.coverLetter = coverLetter;
+        this.coverLetterUpdatedAt = now;
     }
 
     public Instant getCreatedAt() {
