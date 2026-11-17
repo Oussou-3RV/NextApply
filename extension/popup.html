@@ -29,8 +29,36 @@
         </form>
       </section>
 
-      <section id="vue-remplir" hidden>
-        <h1 class="titre">Remplir le formulaire</h1>
+      <!-- Étape 4 : l'offre affichée dans l'onglet -->
+      <section id="vue-offre" class="partie" aria-labelledby="titre-offre" hidden>
+        <h1 class="titre" id="titre-offre">Cette offre</h1>
+        <p id="offre-chargement" class="secondaire">Recherche dans tes offres…</p>
+
+        <div id="offre-inconnue" class="partie" hidden>
+          <p class="secondaire">Cette page n’est pas encore dans NextApply.</p>
+          <div><button id="bouton-ajouter" class="bouton" type="button">Ajouter à NextApply</button></div>
+        </div>
+
+        <div id="offre-connue" class="bloc-offre" hidden>
+          <p class="statut"><span id="offre-marque" class="marque" aria-hidden="true"></span><span id="offre-statut"></span></p>
+          <p id="offre-titre" class="offre-titre"></p>
+          <p id="offre-details" class="secondaire"></p>
+          <p id="offre-experience" class="offre-experience"></p>
+          <div id="offre-doublon" class="doublon" hidden>
+            <p id="offre-doublon-texte"></p>
+            <div class="liens">
+              <button id="bouton-retirer" class="lien" type="button">Retirer celle-ci</button>
+              <button id="bouton-garder" class="lien" type="button">Garder les deux</button>
+            </div>
+          </div>
+          <div><button id="bouton-postulee" class="bouton bouton--contour" type="button">Marquer comme postulée</button></div>
+        </div>
+
+        <p id="offre-message" class="message" role="status" hidden></p>
+      </section>
+
+      <section id="vue-remplir" class="partie" aria-labelledby="titre-remplir" hidden>
+        <h2 class="titre" id="titre-remplir">Formulaire</h2>
         <p class="secondaire">
           Remplit les champs vides que l’extension reconnaît, avec ton profil. Tu relis,
           puis tu envoies toi-même.
