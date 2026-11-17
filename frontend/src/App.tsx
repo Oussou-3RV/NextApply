@@ -6,6 +6,7 @@ import { supabase } from './lib/supabase'
 import ComingSoonPage from './pages/ComingSoonPage'
 import LoginPage from './pages/LoginPage'
 import NewPasswordPage from './pages/NewPasswordPage'
+import OffersPage from './pages/OffersPage'
 import ProfilePage from './pages/ProfilePage'
 
 function App() {
@@ -36,12 +37,7 @@ function App() {
   return (
     <AppShell route={route}>
       {route === 'profil' && <ProfilePage />}
-      {route === 'offres' && (
-        <ComingSoonPage title="Offres">
-          Les offres arrivent à l'étape 4. Tu les ajouteras depuis l'extension Chrome, sur la page
-          de l'offre, et tu verras ici leur statut et leur score.
-        </ComingSoonPage>
-      )}
+      {route === 'offres' && <OffersPage />}
       {route === 'apercu' && (
         <ComingSoonPage title="Aperçu">
           Le tableau de bord arrive à l'étape 6 : tes candidatures de la semaine et celles à relancer.

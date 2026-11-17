@@ -1,0 +1,14 @@
+/* Page Offres (docs/design/Offres.png) : statut, titre et entreprise, lieu, années, actions */
+.offres-partie { margin-top: 56px; }
+.ligne--offre {
+  grid-template-columns: 170px minmax(0, 1fr) minmax(0, 190px) minmax(0, 140px) 40px;
+}
+.ligne--offre .ligne-titre { overflow-wrap: break-word; }
+.lien-offre { color: var(--bleu); text-decoration: none; }
+.lien-offre:hover { text-decoration: underline; text-underline-offset: 3px; }
+.offre-annees { font-variant-numeric: tabular-nums; }
+.offre-actions { display: flex; flex-wrap: wrap; gap: 4px 20px; margin-top: 8px; font-size: 15px; }
+
+@media (max-width: 800px) {
+  .ligne--offre { grid-template-columns: 1fr; }
+}
