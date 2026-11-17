@@ -1,7 +1,9 @@
 package com.nextapply.backend.controller;
 
 import com.nextapply.backend.dto.AddOfferRequest;
+import com.nextapply.backend.dto.CoverLetterRequest;
 import com.nextapply.backend.dto.JobOfferResponse;
+import com.nextapply.backend.dto.OfferDetailResponse;
 import com.nextapply.backend.dto.OfferListResponse;
 import com.nextapply.backend.dto.OfferPageResponse;
 import com.nextapply.backend.dto.OfferStatusRequest;
@@ -51,6 +53,31 @@ public class JobOfferController {
                                                  @Valid @RequestBody AddOfferRequest request) {
         OfferPageResponse response = jobOfferService.add(JwtUser.id(jwt), request);
         return ResponseEntity.status(response.created() ? HttpStatus.CREATED : HttpStatus.OK).body(response);
+    }
+
+    // La fiche d'une offre : score expliqué, texte de l'offre, lettre
+    @GetMapping("/{id}")
+    public OfferDetailResponse detail(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID id) {
+        return jobOfferService.detail(JwtUser.id(jwt), id);
+    }
+
+    // Relit l'offre avec l'IA pour trouver les compétences demandées (offres d'avant l'étape 5)
+    @PostMapping("/{id}/skills")
+    public OfferDetailResponse analyzeSkills(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID id) {
+        return jobOfferService.analyzeSkills(JwtUser.id(jwt), id);
+    }
+
+    // Fait rédiger (ou rédiger de nouveau) la lettre par l'IA
+    @PostMapping("/{id}/letter")
+    public OfferDetailResponse writeCoverLetter(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID id) {
+        return jobOfferService.writeCoverLetter(JwtUser.id(jwt), id);
+    }
+
+    // Enregistre la lettre après mes corrections
+    @PutMapping("/{id}/letter")
+    public OfferDetailResponse saveCoverLetter(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID id,
+                                               @Valid @RequestBody CoverLetterRequest request) {
+        return jobOfferService.saveCoverLetter(JwtUser.id(jwt), id, request.text());
     }
 
     @PutMapping("/{id}/status")

@@ -7,7 +7,9 @@
     "company",
     "location",
     "experienceMin",
-    "experienceMax"
+    "experienceMax",
+    "requiredSkills",
+    "language"
   ],
   "properties": {
     "isJobOffer": {
@@ -45,6 +47,21 @@
         "null"
       ],
       "description": "Maximum de la fourchette (« 3 à 5 ans » → 5). null s'il n'y a pas de maximum."
+    },
+    "requiredSkills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Compétences techniques et langues demandées (exigées ou atouts), une par élément, nom court tel qu'écrit : Java, Spring Boot, SQL, Docker, Anglais. Pas de qualités personnelles (autonomie, rigueur). 20 au plus."
+    },
+    "language": {
+      "type": "string",
+      "enum": [
+        "fr",
+        "en"
+      ],
+      "description": "Langue dans laquelle l'offre est rédigée"
     }
   }
 }

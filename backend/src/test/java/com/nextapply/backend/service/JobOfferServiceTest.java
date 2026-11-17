@@ -3,8 +3,11 @@ package com.nextapply.backend.service;
 import com.nextapply.backend.dto.AddOfferRequest;
 import com.nextapply.backend.dto.OfferPageResponse;
 import com.nextapply.backend.model.JobOffer;
+import com.nextapply.backend.repository.EducationRepository;
 import com.nextapply.backend.repository.ExperienceRepository;
 import com.nextapply.backend.repository.JobOfferRepository;
+import com.nextapply.backend.repository.ProfileRepository;
+import com.nextapply.backend.repository.SkillRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,9 +35,17 @@ class JobOfferServiceTest {
     @Mock
     private JobOfferRepository jobOfferRepository;
     @Mock
+    private ProfileRepository profileRepository;
+    @Mock
     private ExperienceRepository experienceRepository;
     @Mock
+    private EducationRepository educationRepository;
+    @Mock
+    private SkillRepository skillRepository;
+    @Mock
     private OfferAnalyzer offerAnalyzer;
+    @Mock
+    private CoverLetterWriter coverLetterWriter;
 
     @InjectMocks
     private JobOfferService service;
@@ -63,7 +74,8 @@ class JobOfferServiceTest {
     void add_newOffer_isSavedAndFlagsTheSameOfferFromAnotherSite() {
         when(jobOfferRepository.findByUserIdAndUrl(USER_ID, URL)).thenReturn(Optional.empty());
         when(offerAnalyzer.extract("Dev | Lever", "  texte de l'offre  ")).thenReturn(
-                new OfferAnalyzer.ExtractedOffer("Développeuse Java (H/F)", "Acme Inc.", "Montréal", 2, null));
+                new OfferAnalyzer.ExtractedOffer("Développeuse Java (H/F)", "Acme Inc.", "Montréal", 2, null,
+                        List.of("Java", "SQL"), "fr"));
         when(jobOfferRepository.saveAndFlush(any(JobOffer.class))).thenAnswer(call -> {
             JobOffer saved = call.getArgument(0);
             ReflectionTestUtils.setField(saved, "id", UUID.randomUUID());
@@ -78,6 +90,8 @@ class JobOfferServiceTest {
         assertThat(response.created()).isTrue();
         assertThat(response.offer().title()).isEqualTo("Développeuse Java (H/F)");
         assertThat(response.offer().experienceMin()).isEqualTo(2);
+        // Aucune compétence ni expérience dans le profil simulé : 0 % compétences, il manque 2 ans
+        assertThat(response.offer().score()).isZero();
         assertThat(response.possibleDuplicate().id()).isEqualTo(onIndeed.getId());
     }
 
