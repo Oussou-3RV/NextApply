@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "NextApply",
+  "version": "0.1.0",
+  "description": "Remplit les formulaires de candidature à partir de ton profil NextApply.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlqk4nGOYJSiCgdcRFWpUeM8lxDRbyfM4eaqzKBCS3Qk7TLC/qGcyT+J6Ah86sb6rV4gdrTY1FP3MZXCfqDV5PMp8BNxU/J9Om//ZaZbAtjvmqEe7fH4E+LgsPBLWqrmVmquJdM+5Y+ju4LlHhlKnd9QTeh6QDzfVUI5nL3DzNjXeOUVy5WDMFsNKEE6wIMAvc3YJtLW9Axa9ji6GJGADdG/zmX+LK5B1pSIRv3nqcnFEsn/NTpcanc2FVO/Rg0Xjm5u2Xd5QpQfRQscr2B2UedWvrz8xrJUfgNg1ySzeNVeRMk/rMNS+IpfQFImne/uzqdGhh0mNV06bl8FL2psTZQIDAQAB",
+  "action": {
+    "default_title": "NextApply",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": [
+    "http://localhost:8080/*",
+    "https://*.myworkdayjobs.com/*",
+    "https://*.myworkdaysite.com/*",
+    "https://*.greenhouse.io/*",
+    "https://*.lever.co/*",
+    "https://*.indeed.com/*",
+    "https://*.linkedin.com/*"
+  ]
+}

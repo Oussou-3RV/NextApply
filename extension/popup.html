@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>NextApply</title>
+  </head>
+  <body>
+    <main class="popup">
+      <div class="logo">
+        <img src="/nextapply-symbole.svg" alt="" width="28" height="28" />
+        <span class="logo-nom">Next<span>Apply</span></span>
+      </div>
+
+      <p id="chargement" class="secondaire">Chargement…</p>
+
+      <section id="vue-connexion" hidden>
+        <h1 class="titre">Se connecter</h1>
+        <p class="secondaire">Le même compte que l’app NextApply.</p>
+        <form id="form-connexion" class="formulaire" novalidate>
+          <div class="champ">
+            <label for="email">Courriel</label>
+            <input id="email" name="email" type="email" autocomplete="email" />
+          </div>
+          <div class="champ">
+            <label for="password">Mot de passe</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" />
+          </div>
+          <div><button id="bouton-connexion" class="bouton" type="submit">Se connecter</button></div>
+        </form>
+      </section>
+
+      <section id="vue-remplir" hidden>
+        <h1 class="titre">Remplir le formulaire</h1>
+        <p class="secondaire">
+          Remplit les champs vides que l’extension reconnaît, avec ton profil. Tu relis,
+          puis tu envoies toi-même.
+        </p>
+        <div><button id="bouton-remplir" class="bouton" type="button">Remplir cette page</button></div>
+      </section>
+
+      <p id="message" class="message" role="status" hidden></p>
+
+      <!-- Après le message, pour que le résultat du remplissage soit juste sous le bouton -->
+      <p id="pied" class="pied secondaire" hidden>
+        Connecté : <span id="email-connecte"></span>.
+        <button id="bouton-deconnexion" class="lien" type="button">Se déconnecter</button>
+      </p>
+    </main>
+    <script type="module" src="/src/popup/popup.ts"></script>
+  </body>
+</html>

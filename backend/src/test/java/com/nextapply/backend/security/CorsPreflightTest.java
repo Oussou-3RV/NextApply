@@ -41,6 +41,17 @@ class CorsPreflightTest {
     }
 
     @Test
+    void requestFromTheChromeExtension_isAllowed() throws Exception {
+        // L'extension lit le profil avec un GET : pas de preflight, mais Spring vérifie
+        // quand même l'en-tête Origin et répondrait 403 à une origine inconnue
+        mockMvc.perform(get("/api/profile")
+                        .header("Origin", "chrome-extension://hlaeabgodejnlpdghobbdocknogbkfah"))
+                .andExpect(status().isUnauthorized()) // pas de jeton ici : 401, mais pas 403
+                .andExpect(header().string("Access-Control-Allow-Origin",
+                        "chrome-extension://hlaeabgodejnlpdghobbdocknogbkfah"));
+    }
+
+    @Test
     void preflightFromAnotherSite_isRejected() throws Exception {
         mockMvc.perform(options("/api/profile")
                         .header("Origin", "https://site-inconnu.example")
