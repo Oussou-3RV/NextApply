@@ -5,17 +5,12 @@ import com.nextapply.backend.dto.EducationRequest;
 import com.nextapply.backend.dto.ExperienceRequest;
 import com.nextapply.backend.dto.ProfileRequest;
 import com.nextapply.backend.dto.SkillRequest;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import tools.jackson.core.JacksonException;
-import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.json.JsonMapper;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.HashSet;
@@ -53,7 +48,7 @@ public class CvAnalyzer {
     public CvAnalyzer(OpenAiClient openAiClient, JsonMapper jsonMapper) {
         this.openAiClient = openAiClient;
         this.jsonMapper = jsonMapper;
-        this.schema = loadSchema(jsonMapper);
+        this.schema = JsonSchemas.load(jsonMapper, "openai/cv-profile-schema.json");
     }
 
     public CvProposalResponse analyze(String cvText) {
@@ -139,15 +134,6 @@ public class CvAnalyzer {
 
     private static <T> List<T> listOf(List<T> list) {
         return list == null ? List.of() : list;
-    }
-
-    private static Map<String, Object> loadSchema(JsonMapper jsonMapper) {
-        try (InputStream in = new ClassPathResource("openai/cv-profile-schema.json").getInputStream()) {
-            return jsonMapper.readValue(in, new TypeReference<>() {
-            });
-        } catch (IOException e) {
-            throw new UncheckedIOException("Schéma openai/cv-profile-schema.json introuvable", e);
-        }
     }
 
     // --- Forme brute de la réponse de l'IA (voir cv-profile-schema.json) ---
