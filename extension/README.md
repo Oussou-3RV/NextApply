@@ -1,8 +1,13 @@
 # Extension Chrome NextApply
 
-Remplit les formulaires de candidature à partir de mon profil NextApply.
-Elle remplit seulement les champs vides qu'elle reconnaît et les encadre en bleu.
-C'est toujours moi qui relis et qui clique sur « Envoyer ».
+Deux choses, toujours à ma demande, dans l'onglet ouvert :
+
+- **Cette offre** : dit si la page est déjà dans NextApply (et son statut),
+  l'ajoute avec « Ajouter à NextApply » (l'IA du backend lit l'offre), compare
+  l'expérience demandée à la mienne, signale un doublon publié sur un autre site,
+  et la marque comme postulée.
+- **Formulaire** : remplit les champs vides qu'elle reconnaît avec mon profil et
+  les encadre en bleu. C'est toujours moi qui relis et qui clique sur « Envoyer ».
 
 ## Installer (en local)
 
@@ -25,6 +30,9 @@ dans `chrome://extensions`.
 
 - `src/popup/` : la fenêtre de l'extension. Connexion Supabase (session gardée dans
   `chrome.storage.local`), lecture du profil par `GET /api/profile`.
+  `offer.ts` gère le bloc « Cette offre » (`/api/offers/lookup`, `POST /api/offers`,
+  statut, retrait d'un doublon) ; le texte de la page est lu seulement au clic sur
+  « Ajouter à NextApply ».
 - `src/content/` : le script injecté dans la page, seulement au clic sur
   « Remplir cette page ». Il reçoit les valeurs du profil, jamais le jeton.
   `match.ts` reconnaît les champs (autocomplete, name, id, libellé…).

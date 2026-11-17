@@ -13,7 +13,7 @@ body {
   background: var(--blanc);
 }
 
-h1, p { margin: 0; }
+h1, h2, p { margin: 0; }
 img, svg { display: block; }
 button, input { font: inherit; color: inherit; }
 [hidden] { display: none !important; }
@@ -59,3 +59,23 @@ section { display: flex; flex-direction: column; gap: 16px; }
 .message svg { flex: none; margin-top: 2px; }
 .message--erreur { color: var(--rouge); }
 .message--succes, .message--info { color: var(--bleu-secondaire); }
+
+/* ---------- Bloc « Cette offre » ---------- */
+.partie { display: flex; flex-direction: column; gap: 16px; }
+.bloc-offre { display: flex; flex-direction: column; gap: 10px; padding: 20px; background: var(--bleu-pale); }
+.offre-titre { font-size: 19px; font-weight: 700; line-height: 1.25; }
+.offre-experience { font-weight: 600; }
+.bloc-offre .bouton { margin-top: 6px; }
+.bouton--contour { background: var(--blanc); color: var(--bleu); }
+.bouton--contour:hover:not(:disabled) { background: var(--bleu-pale); }
+.doublon { display: flex; flex-direction: column; gap: 8px; padding-left: 12px; border-left: 3px solid var(--bleu); font-size: 15px; }
+.liens { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+#vue-remplir { padding-top: 20px; border-top: 1px solid var(--bleu-ligne); }
+
+/* Statuts : la forme dit le statut, comme dans l'app */
+.statut { display: inline-flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; }
+.marque { flex: none; width: 12px; height: 12px; border-radius: 50%; }
+.marque--nouvelle { background: var(--rouge); }
+.marque--vue { border: 2px solid var(--bleu); }
+.marque--postulee { background: var(--bleu); }
+.marque--masquee { height: 2px; border-radius: 0; background: var(--bleu); }

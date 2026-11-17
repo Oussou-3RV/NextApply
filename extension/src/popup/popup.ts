@@ -2,10 +2,10 @@ import '@fontsource-variable/public-sans'
 import './popup.css'
 import type { FieldKey, FillProfile, FillResult } from '../shared/types'
 import { SessionExpiredError, fetchProfile, toFillProfile } from './api'
+import { hideOfferPanel, showOfferPanel } from './offer'
 import { supabase } from './supabase'
-
-// Raccourci : récupère un élément de popup.html par son id
-const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T
+import { $, hideMessage as hideIn, showMessage as showIn } from './ui'
+import type { MessageKind } from './ui'
 
 const loading = $<HTMLParagraphElement>('chargement')
 const loginView = $<HTMLElement>('vue-connexion')
@@ -24,27 +24,9 @@ const LABELS: Record<FieldKey, string> = {
   linkedin: 'LinkedIn', github: 'GitHub', portfolio: 'portfolio',
 }
 
-// Icônes Lucide (licence ISC) : le message ne se repère pas qu'à sa couleur
-const ICONS = {
-  erreur: '<circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/>',
-  succes: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
-  info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
-}
-
-function showMessage(kind: keyof typeof ICONS, text: string) {
-  message.className = `message message--${kind}`
-  message.setAttribute('role', kind === 'erreur' ? 'alert' : 'status')
-  message.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[kind]}</svg>`
-  const span = document.createElement('span')
-  span.textContent = text // textContent : jamais de HTML venu d'ailleurs
-  message.append(span)
-  message.hidden = false
-}
-
-function hideMessage() {
-  message.hidden = true
-}
+// Message sous le bouton « Remplir » (le bloc « Cette offre » a le sien)
+const showMessage = (kind: MessageKind, text: string) => showIn(message, kind, text)
+const hideMessage = () => hideIn(message)
 
 function show(view: 'connexion' | 'remplir', email?: string) {
   loading.hidden = true
@@ -52,6 +34,21 @@ function show(view: 'connexion' | 'remplir', email?: string) {
   fillView.hidden = view !== 'remplir'
   footer.hidden = view !== 'remplir'
   if (email) connectedEmail.textContent = email
+  if (view === 'connexion') hideOfferPanel()
+}
+
+// Session expirée pendant un appel : retour à l'écran de connexion
+async function sessionExpired() {
+  await supabase.auth.signOut()
+  show('connexion')
+  showMessage('erreur', 'Ta session a expiré. Reconnecte-toi.')
+}
+
+// Une fois connecté : le bloc « Cette offre » pour l'onglet ouvert, puis le remplissage
+async function showConnected(email: string | undefined) {
+  show('remplir', email)
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
+  if (tab) await showOfferPanel(tab, sessionExpired)
 }
 
 // ---------- Connexion ----------
@@ -75,7 +72,7 @@ loginForm.addEventListener('submit', async (event) => {
     return
   }
   loginForm.reset()
-  show('remplir', result.session.user.email)
+  await showConnected(result.session.user.email)
 })
 
 logoutButton.addEventListener('click', async () => {
@@ -110,9 +107,7 @@ fillButton.addEventListener('click', async () => {
     }
   } catch (e) {
     if (e instanceof SessionExpiredError) {
-      await supabase.auth.signOut()
-      show('connexion')
-      showMessage('erreur', 'Ta session a expiré. Reconnecte-toi.')
+      await sessionExpired()
     } else {
       showMessage('erreur', e instanceof Error ? e.message : 'Erreur inattendue. Réessaie.')
     }
@@ -142,5 +137,5 @@ async function fillTab(tabId: number, profile: FillProfile): Promise<FieldKey[]>
 
 // ---------- Au démarrage ----------
 const { data } = await supabase.auth.getSession()
-if (data.session) show('remplir', data.session.user.email)
+if (data.session) await showConnected(data.session.user.email)
 else show('connexion')
