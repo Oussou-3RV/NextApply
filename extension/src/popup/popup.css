@@ -1,0 +1,61 @@
+/* Mêmes couleurs que l'app : on importe les variables du frontend au lieu de les recopier */
+@import '../../../frontend/src/styles/tokens.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  width: 360px;
+  font-family: var(--police);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--bleu);
+  background: var(--blanc);
+}
+
+h1, p { margin: 0; }
+img, svg { display: block; }
+button, input { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+
+:focus-visible { outline: 3px solid var(--rouge); outline-offset: 3px; }
+
+.popup { display: flex; flex-direction: column; gap: 20px; padding: 24px; }
+
+.logo { display: inline-flex; align-items: center; gap: 10px; }
+.logo-nom { font-size: 20px; font-weight: 800; letter-spacing: -0.04em; }
+.logo-nom span { color: var(--rouge); }
+
+section { display: flex; flex-direction: column; gap: 16px; }
+.titre { font-size: 26px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+.secondaire { color: var(--bleu-secondaire); font-size: 15px; }
+
+.formulaire { display: flex; flex-direction: column; gap: 20px; }
+.champ { display: flex; flex-direction: column; gap: 6px; }
+.champ label { font-size: 15px; font-weight: 500; color: var(--bleu-secondaire); }
+.champ input {
+  padding: 8px 0; border: 0; border-bottom: 2px solid var(--bleu); border-radius: 0;
+  background: transparent; font-size: 17px;
+}
+.champ input:focus-visible { outline-offset: 4px; }
+
+.bouton {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 52px; padding: 0 24px;
+  border: 2px solid var(--bleu); border-radius: 0;
+  background: var(--bleu); color: var(--blanc);
+  font-weight: 700; cursor: pointer;
+}
+.bouton:disabled { opacity: 0.55; cursor: default; }
+
+.lien {
+  padding: 0; border: 0; background: none; color: var(--bleu);
+  text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+}
+
+.pied { padding-top: 16px; border-top: 1px solid var(--bleu-ligne); }
+
+.message { display: flex; align-items: flex-start; gap: 8px; font-size: 15px; }
+.message svg { flex: none; margin-top: 2px; }
+.message--erreur { color: var(--rouge); }
+.message--succes, .message--info { color: var(--bleu-secondaire); }
