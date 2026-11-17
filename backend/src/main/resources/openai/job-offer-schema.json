@@ -1,0 +1,50 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "isJobOffer",
+    "title",
+    "company",
+    "location",
+    "experienceMin",
+    "experienceMax"
+  ],
+  "properties": {
+    "isJobOffer": {
+      "type": "boolean",
+      "description": "false si la page n'est pas une offre d'emploi (liste de résultats, accueil, article…)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Intitulé du poste, tel qu'écrit dans l'offre"
+    },
+    "company": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Employeur qui recrute. Jamais le site d'emploi (Indeed, LinkedIn, Workday, Greenhouse, Lever). null si absent."
+    },
+    "location": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Ville, suivie du mode de travail s'il est indiqué : « Montréal, hybride », « Québec », « Télétravail ». null si absent."
+    },
+    "experienceMin": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Minimum d'années d'expérience professionnelle exigé pour le poste. null si l'offre n'en dit rien."
+    },
+    "experienceMax": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "description": "Maximum de la fourchette (« 3 à 5 ans » → 5). null s'il n'y a pas de maximum."
+    }
+  }
+}
