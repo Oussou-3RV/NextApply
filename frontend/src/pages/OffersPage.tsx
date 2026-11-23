@@ -1,9 +1,11 @@
 import { Trash2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import Message from '../components/Message'
 import { errorMessage } from '../lib/api'
 import { formatAppliedDate, formatExperience, isHidden, offersApi } from '../lib/offers'
 import type { JobOffer, OfferList, OfferStatus } from '../lib/offers'
+import { hrefOfOffer } from '../lib/router'
+import { useReloadOnReturn } from '../lib/useReloadOnReturn'
 import '../styles/offres.css'
 
 type Tab = 'toutes' | 'nouvelle' | 'vue' | 'postulee'
@@ -21,9 +23,31 @@ export default function OffersPage() {
   const [tab, setTab] = useState<Tab>('toutes')
   const [showHidden, setShowHidden] = useState(false)
 
-  useEffect(() => {
-    offersApi.list().then(setData).catch((e: unknown) => setError(errorMessage(e)))
-  }, [])
+  // Calcul des scores manquants : null, ou la progression (« 2 sur 5 »)
+  const [scoring, setScoring] = useState<{ done: number; total: number } | null>(null)
+
+  // Rechargée aussi quand je reviens sur l'onglet (offre ajoutée depuis l'extension)
+  const load = useCallback(
+    () => offersApi.list().then(setData).catch((e: unknown) => setError(errorMessage(e))), [])
+  useReloadOnReturn(load)
+
+  // Offres ajoutées avant le calcul du score : un appel à l'IA par offre, l'un après
+  // l'autre, pour afficher la progression et garder ce qui a déjà réussi en cas d'erreur
+  async function computeMissingScores(offers: JobOffer[]) {
+    setError(null)
+    setScoring({ done: 0, total: offers.length })
+    try {
+      for (const [i, offer] of offers.entries()) {
+        const detail = await offersApi.analyzeSkills(offer.id)
+        replace(detail.offer)
+        setScoring({ done: i + 1, total: offers.length })
+      }
+    } catch (e) {
+      setError(errorMessage(e))
+    } finally {
+      setScoring(null)
+    }
+  }
 
   // Après une action, on remplace l'offre par la réponse du serveur
   function replace(updated: JobOffer) {
@@ -68,6 +92,7 @@ export default function OffersPage() {
   const applied = shown.filter((o) => o.status === 'postulee')
 
   const rowProps = { myYears: data.myExperienceYears, onStatus: changeStatus, onRemove: remove }
+  const withoutScore = data.offers.filter((o) => !o.skillsAnalyzed)
 
   return (
     <>
@@ -90,6 +115,22 @@ export default function OffersPage() {
             </>
           )}
         </p>
+      )}
+      {(withoutScore.length > 0 || scoring) && (
+        <div className="chapeau scores-manquants">
+          {scoring ? (
+            <Message kind="info">Calcul des scores : {scoring.done} sur {scoring.total}…</Message>
+          ) : (
+            <p>
+              {withoutScore.length > 1
+                ? `${withoutScore.length} offres ajoutées avant le calcul du score n’en ont pas encore.`
+                : '1 offre ajoutée avant le calcul du score n’en a pas encore.'}{' '}
+              <button type="button" className="lien" onClick={() => computeMissingScores(withoutScore)}>
+                Calculer {withoutScore.length > 1 ? 'leur' : 'son'} score
+              </button>
+            </p>
+          )}
+        </div>
       )}
       {error && <div className="chapeau"><Message kind="erreur">{error}</Message></div>}
 
@@ -161,18 +202,13 @@ function OfferSection({ title, offers, ...rowProps }: RowProps & { title: string
 
 function OfferRow({ offer, myYears, onStatus, onRemove }: RowProps & { offer: JobOffer }) {
   const masked = isHidden(offer)
-  // Ouvrir l'offre la fait passer de « Nouvelle » à « Vue »
-  const handleOpen = () => {
-    if (offer.status === 'nouvelle') onStatus(offer, 'vue')
-  }
 
   return (
     <li className={`ligne ligne--offre${masked ? ' ligne--masquee' : ''}`}>
       <StatusLabel offer={offer} />
       <div>
-        <a className="ligne-titre lien-offre" href={offer.url} target="_blank" rel="noreferrer" onClick={handleOpen}>
-          {offer.title}
-        </a>
+        {/* Ouvre la fiche de l'offre (score, lettre, informations à copier) */}
+        <a className="ligne-titre lien-offre" href={hrefOfOffer(offer.id)}>{offer.title}</a>
         {offer.company && <div className="secondaire">{offer.company}</div>}
         <div className="offre-actions">
           {offer.status === 'postulee' ? (
@@ -193,6 +229,9 @@ function OfferRow({ offer, myYears, onStatus, onRemove }: RowProps & { offer: Jo
         {offer.experienceFit === 'ecart' && <div className="secondaire">1 an de plus que toi</div>}
         {offer.experienceFit === 'trop' && <div className="secondaire">Tu en as {myYears}</div>}
       </div>
+      <div className="offre-score" title={scoreTitle(offer)}>
+        {offer.score ?? <span className="secondaire" aria-label={scoreTitle(offer)}>–</span>}
+      </div>
       <div className="ligne-actions">
         <button type="button" className="bouton-icone" onClick={() => onRemove(offer)}
           aria-label={`Supprimer « ${offer.title} »`} title="Supprimer">
@@ -201,6 +240,12 @@ function OfferRow({ offer, myYears, onStatus, onRemove }: RowProps & { offer: Jo
       </div>
     </li>
   )
+}
+
+// Pourquoi il n'y a pas de score (au survol du « – »)
+function scoreTitle(offer: JobOffer): string {
+  if (offer.score !== null) return 'Score de compatibilité sur 100'
+  return offer.skillsAnalyzed ? 'L’offre ne cite aucune compétence précise' : 'Score pas encore calculé'
 }
 
 // La forme dit le statut : point rouge plein, cercle vide, point bleu plein, trait

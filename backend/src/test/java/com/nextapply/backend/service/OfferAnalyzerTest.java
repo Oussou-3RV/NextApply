@@ -64,6 +64,17 @@ class OfferAnalyzerTest {
     }
 
     @Test
+    void extract_cleansSkillsAndLanguage() {
+        aiAnswers("""
+                {"isJobOffer": true, "title": "Dev", "company": "Acme", "location": null,
+                 "experienceMin": null, "experienceMax": null,
+                 "requiredSkills": [" Java ", "java", "", "Spring Boot"], "language": "en"}""");
+        OfferAnalyzer.ExtractedOffer offer = analyzer.extract(null, "texte");
+        assertThat(offer.requiredSkills()).containsExactly("Java", "Spring Boot");
+        assertThat(offer.language()).isEqualTo("en");
+    }
+
+    @Test
     void extract_pageThatIsNotAnOffer_isRejectedWith422() {
         aiAnswers("""
                 {"isJobOffer": false, "title": "", "company": null, "location": null,

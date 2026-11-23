@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "body"
+  ],
+  "properties": {
+    "body": {
+      "type": "string",
+      "description": "Le texte de la lettre, de la formule d'appel à la formule de politesse, sans signature. Paragraphes séparés par une ligne vide."
+    }
+  }
+}

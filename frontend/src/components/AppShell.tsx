@@ -17,7 +17,7 @@ export default function AppShell({ route, children }: { route: Route; children: 
     <>
       <header className="entete">
         <div className="entete-interieur">
-          <Logo href={hrefOf('profil')} />
+          <Logo href={hrefOf('apercu')} />
           <nav className="navigation" aria-label="Navigation principale">
             {LINKS.map((link) => (
               <a key={link.route} href={hrefOf(link.route)}

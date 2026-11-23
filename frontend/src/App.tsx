@@ -3,9 +3,10 @@ import type { Session } from '@supabase/supabase-js'
 import AppShell from './components/AppShell'
 import { useRoute } from './lib/router'
 import { supabase } from './lib/supabase'
-import ComingSoonPage from './pages/ComingSoonPage'
+import DashboardPage from './pages/DashboardPage'
 import LoginPage from './pages/LoginPage'
 import NewPasswordPage from './pages/NewPasswordPage'
+import OfferPage from './pages/OfferPage'
 import OffersPage from './pages/OffersPage'
 import ProfilePage from './pages/ProfilePage'
 
@@ -14,7 +15,7 @@ function App() {
   const [loading, setLoading] = useState(true)
   // true quand on arrive par le lien « Mot de passe oublié » reçu par courriel
   const [recovering, setRecovering] = useState(false)
-  const route = useRoute()
+  const { route, param } = useRoute()
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -37,12 +38,8 @@ function App() {
   return (
     <AppShell route={route}>
       {route === 'profil' && <ProfilePage />}
-      {route === 'offres' && <OffersPage />}
-      {route === 'apercu' && (
-        <ComingSoonPage title="Aperçu">
-          Le tableau de bord arrive à l'étape 6 : tes candidatures de la semaine et celles à relancer.
-        </ComingSoonPage>
-      )}
+      {route === 'offres' && (param ? <OfferPage key={param} id={param} /> : <OffersPage />)}
+      {route === 'apercu' && <DashboardPage />}
     </AppShell>
   )
 }

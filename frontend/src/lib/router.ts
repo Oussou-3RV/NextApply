@@ -1,30 +1,39 @@
 import { useEffect, useState } from 'react'
 
-// Navigation minimale par l'ancre de l'URL (#/profil) : de vrais liens <a>,
-// le bouton Précédent fonctionne, et aucune bibliothèque pour trois pages.
+// Navigation minimale par l'ancre de l'URL (#/profil, #/offres/<id>) : de vrais
+// liens <a>, le bouton Précédent fonctionne, et aucune bibliothèque pour quatre écrans.
 export const ROUTES = ['apercu', 'offres', 'profil'] as const
 export type Route = (typeof ROUTES)[number]
 
-const DEFAULT_ROUTE: Route = 'profil'
+// param : la partie après la page, par exemple l'id de l'offre dans #/offres/<id>
+export interface Location {
+  route: Route
+  param: string | null
+}
 
-function readRoute(): Route {
-  const value = window.location.hash.replace(/^#\/?/, '')
-  return (ROUTES as readonly string[]).includes(value) ? (value as Route) : DEFAULT_ROUTE
+// Page d'accueil : le tableau de bord (étape 6)
+const DEFAULT_ROUTE: Route = 'apercu'
+
+function readLocation(): Location {
+  const [first, second] = window.location.hash.replace(/^#\/?/, '').split('/')
+  const route = (ROUTES as readonly string[]).includes(first) ? (first as Route) : DEFAULT_ROUTE
+  return { route, param: second ? decodeURIComponent(second) : null }
 }
 
 export const hrefOf = (route: Route) => `#/${route}`
+export const hrefOfOffer = (id: string) => `#/offres/${encodeURIComponent(id)}`
 
-export function useRoute(): Route {
-  const [route, setRoute] = useState<Route>(readRoute)
+export function useRoute(): Location {
+  const [location, setLocation] = useState<Location>(readLocation)
 
   useEffect(() => {
     const onChange = () => {
-      setRoute(readRoute())
+      setLocation(readLocation())
       window.scrollTo(0, 0)
     }
     window.addEventListener('hashchange', onChange)
     return () => window.removeEventListener('hashchange', onChange)
   }, [])
 
-  return route
+  return location
 }

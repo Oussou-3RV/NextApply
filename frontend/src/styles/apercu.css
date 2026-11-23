@@ -1,0 +1,28 @@
+/* Page Aperçu : de grands chiffres en texte, puis des listes. Pas de cartes. */
+.chiffres {
+  list-style: none; margin: 48px 0 0; padding: 0;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 40px;
+  max-width: 880px; font-size: 17px; color: var(--bleu-secondaire);
+}
+.chiffres li { padding-top: 16px; border-top: 1px solid var(--bleu-ligne); }
+.chiffre {
+  display: block; margin-bottom: 4px; color: var(--bleu);
+  font-size: 52px; font-weight: 800; letter-spacing: -0.04em; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.apercu-partie { margin-top: 64px; }
+.apercu-partie .chapeau { margin-top: 8px; }
+.ligne--apercu { grid-template-columns: 190px minmax(0, 1fr) auto; }
+.ligne--manque { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.lien-offre { color: var(--bleu); text-decoration: none; }
+.lien-offre:hover { text-decoration: underline; text-underline-offset: 3px; }
+.apercu-score { min-width: 48px; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; text-align: right;
+  font-variant-numeric: tabular-nums; }
+.apercu-lien { margin-top: 24px; }
+
+@media (max-width: 800px) {
+  .chiffres { grid-template-columns: 1fr; }
+  .ligne--apercu, .ligne--manque { grid-template-columns: 1fr; }
+  .apercu-score { text-align: left; }
+}
