@@ -146,6 +146,16 @@ public class JobOfferService {
     }
 
     @Transactional
+    public JobOfferResponse markFollowedUp(UUID userId, UUID id) {
+        JobOffer offer = findOwned(userId, id);
+        if (!offer.markFollowedUp(Instant.now())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Marque d'abord cette offre comme postulée : on ne relance qu'une candidature envoyée.");
+        }
+        return JobOfferResponse.from(jobOfferRepository.saveAndFlush(offer), matcher(userId));
+    }
+
+    @Transactional
     public void delete(UUID userId, UUID id) {
         jobOfferRepository.delete(findOwned(userId, id));
     }

@@ -23,6 +23,7 @@ public record JobOfferResponse(
         boolean skillsAnalyzed,
         String status,
         Instant appliedAt,
+        Instant followedUpAt,
         Instant createdAt
 ) {
 
@@ -40,6 +41,7 @@ public record JobOfferResponse(
                 offer.getRequiredSkills() != null,
                 offer.getStatus(),
                 offer.getAppliedAt(),
+                offer.getFollowedUpAt(),
                 offer.getCreatedAt()
         );
     }

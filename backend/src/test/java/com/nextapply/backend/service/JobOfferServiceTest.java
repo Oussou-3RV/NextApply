@@ -13,7 +13,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -100,6 +103,30 @@ class JobOfferServiceTest {
         assertThat(JobOfferService.duplicateKey("Acme Inc.", "Développeur Java (H/F)"))
                 .isEqualTo(JobOfferService.duplicateKey("ACME", "developpeur java"));
         assertThat(JobOfferService.duplicateKey(null, "Développeur Java")).isNull();
+    }
+
+    @Test
+    void followUp_onlyForAnAppliedOffer_andClearedWhenNoLongerApplied() {
+        JobOffer offer = offer(URL, "Acme", "Dev");
+        assertThat(offer.markFollowedUp(Instant.now())).isFalse(); // pas encore postulée
+        assertThat(offer.getFollowedUpAt()).isNull();
+
+        offer.changeStatus(JobOffer.APPLIED, Instant.parse("2026-11-01T10:00:00Z"));
+        assertThat(offer.markFollowedUp(Instant.parse("2026-11-10T10:00:00Z"))).isTrue();
+        assertThat(offer.getFollowedUpAt()).isEqualTo(Instant.parse("2026-11-10T10:00:00Z"));
+
+        offer.changeStatus(JobOffer.SEEN, Instant.now());
+        assertThat(offer.getFollowedUpAt()).isNull();
+    }
+
+    @Test
+    void markFollowedUp_onANotAppliedOffer_isRejectedWith409() {
+        JobOffer offer = offer(URL, "Acme", "Dev");
+        when(jobOfferRepository.findByIdAndUserId(offer.getId(), USER_ID)).thenReturn(Optional.of(offer));
+
+        assertThatThrownBy(() -> service.markFollowedUp(USER_ID, offer.getId()))
+                .isInstanceOfSatisfying(ResponseStatusException.class,
+                        e -> assertThat(e.getStatusCode()).isEqualTo(HttpStatus.CONFLICT));
     }
 
     @Test

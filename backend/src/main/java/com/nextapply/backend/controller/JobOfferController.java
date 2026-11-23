@@ -87,6 +87,12 @@ public class JobOfferController {
         return jobOfferService.changeStatus(JwtUser.id(jwt), id, request.status());
     }
 
+    // Note que j'ai relancé l'employeur pour cette candidature
+    @PostMapping("/{id}/follow-up")
+    public JobOfferResponse markFollowedUp(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID id) {
+        return jobOfferService.markFollowedUp(JwtUser.id(jwt), id);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID id) {

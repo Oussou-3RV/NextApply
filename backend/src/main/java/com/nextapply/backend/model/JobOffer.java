@@ -50,6 +50,7 @@ public class JobOffer {
     private String status = NEW;
 
     private Instant appliedAt;
+    private Instant followedUpAt; // dernière relance ; seulement pour une offre postulée
 
     // Colonne text[] de PostgreSQL : Hibernate la lit et l'écrit comme une liste.
     // null = compétences pas encore analysées (offres ajoutées avant l'étape 5)
@@ -85,8 +86,18 @@ public class JobOffer {
             appliedAt = now;
         } else if (!APPLIED.equals(newStatus)) {
             appliedAt = null;
+            followedUpAt = null; // plus de candidature : plus de relance (chk_job_offers_follow_up)
         }
         status = newStatus;
+    }
+
+    // Note que j'ai relancé l'employeur. Renvoie false si l'offre n'est pas postulée.
+    public boolean markFollowedUp(Instant now) {
+        if (!APPLIED.equals(status)) {
+            return false;
+        }
+        followedUpAt = now;
+        return true;
     }
 
     public UUID getId() {
@@ -151,6 +162,10 @@ public class JobOffer {
 
     public Instant getAppliedAt() {
         return appliedAt;
+    }
+
+    public Instant getFollowedUpAt() {
+        return followedUpAt;
     }
 
     public List<String> getRequiredSkills() {
