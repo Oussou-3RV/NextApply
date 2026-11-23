@@ -1,28 +1,29 @@
-/* Page Aperçu : de grands chiffres en texte, puis des listes. Pas de cartes. */
-.chiffres {
-  list-style: none; margin: 48px 0 0; padding: 0;
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 40px;
-  max-width: 880px; font-size: 17px; color: var(--bleu-secondaire);
-}
-.chiffres li { padding-top: 16px; border-top: 1px solid var(--bleu-ligne); }
-.chiffre {
-  display: block; margin-bottom: 4px; color: var(--bleu);
-  font-size: 52px; font-weight: 800; letter-spacing: -0.04em; line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
+/* Page Aperçu : un résumé en une phrase, puis des listes d'actions. Pas de cartes. */
+.apercu-resume strong { color: var(--bleu); font-weight: 700; font-variant-numeric: tabular-nums; }
 
 .apercu-partie { margin-top: 64px; }
 .apercu-partie .chapeau { margin-top: 8px; }
+.apercu-message { margin-top: 16px; }
+.apercu-erreur {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+  margin-top: 16px; font-size: 15px;
+}
+
 .ligne--apercu { grid-template-columns: 190px minmax(0, 1fr) auto; }
 .ligne--manque { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+/* Titres d'offre très longs ou sans espace : ils passent à la ligne au lieu de déborder */
+.ligne--apercu .ligne-titre, .ligne--manque .ligne-titre { overflow-wrap: break-word; }
+.ligne--apercu .lien:disabled { color: var(--bleu-secondaire); text-decoration: none; cursor: default; }
 .lien-offre { color: var(--bleu); text-decoration: none; }
 .lien-offre:hover { text-decoration: underline; text-underline-offset: 3px; }
 .apercu-score { min-width: 48px; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; text-align: right;
   font-variant-numeric: tabular-nums; }
 .apercu-lien { margin-top: 24px; }
 
+/* Le titre de section reçoit le focus après la dernière relance : pas de contour au clic */
+.titre-section[tabindex="-1"]:focus:not(:focus-visible) { outline: none; }
+
 @media (max-width: 800px) {
-  .chiffres { grid-template-columns: 1fr; }
   .ligne--apercu, .ligne--manque { grid-template-columns: 1fr; }
   .apercu-score { text-align: left; }
 }

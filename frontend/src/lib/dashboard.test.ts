@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { bestToExamine, profileGaps, startOfWeek, toFollowUp, weekStats } from './dashboard'
+import { bestToExamine, displayFirstName, profileGaps, startOfWeek, toFollowUp, weekStats } from './dashboard'
 import type { JobOffer } from './offers'
 import type { Profile } from './types'
 
@@ -72,5 +72,18 @@ describe('profileGaps', () => {
       'Ajoute ton profil LinkedIn.',
       'Écris quelques phrases de résumé.',
     ])
+  })
+})
+
+describe('displayFirstName', () => {
+  it('remet en casse normale un prénom tout en majuscules', () => {
+    expect(displayFirstName('OUSMANE')).toBe('Ousmane')
+    expect(displayFirstName('JEAN-ÉRIC')).toBe('Jean-Éric')
+    expect(displayFirstName(' MARIE ANNE ')).toBe('Marie Anne')
+  })
+  it('garde un prénom déjà écrit en casse mixte, et ignore un prénom vide', () => {
+    expect(displayFirstName('DeShawn')).toBe('DeShawn')
+    expect(displayFirstName('  ')).toBeNull()
+    expect(displayFirstName(null)).toBeNull()
   })
 })

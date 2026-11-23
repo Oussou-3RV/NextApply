@@ -54,6 +54,15 @@ export function bestToExamine(offers: JobOffer[], limit = 5): JobOffer[] {
     .slice(0, limit)
 }
 
+// Prénom tel qu'on l'écrit dans une phrase : « OUSMANE » devient « Ousmane ».
+// Un prénom déjà en casse mixte (« Marie-Ève », « DeShawn ») reste tel quel.
+export function displayFirstName(name: string | null): string | null {
+  const trimmed = name?.trim()
+  if (!trimmed) return null
+  if (trimmed !== trimmed.toUpperCase()) return trimmed
+  return trimmed.toLowerCase().replace(/(^|[\s'’-])(\p{L})/gu, (_, sep: string, letter: string) => sep + letter.toUpperCase())
+}
+
 export interface ProfileGap {
   action: string // ce qu'il faut faire
   why: string // à quoi ça sert
