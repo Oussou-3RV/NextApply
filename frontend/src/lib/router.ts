@@ -11,7 +11,8 @@ export interface Location {
   param: string | null
 }
 
-const DEFAULT_ROUTE: Route = 'profil'
+// Page d'accueil : le tableau de bord (étape 6)
+const DEFAULT_ROUTE: Route = 'apercu'
 
 function readLocation(): Location {
   const [first, second] = window.location.hash.replace(/^#\/?/, '').split('/')

@@ -19,6 +19,7 @@ export interface JobOffer {
   skillsAnalyzed: boolean // false : offre ajoutée avant le calcul du score
   status: OfferStatus
   appliedAt: string | null
+  followedUpAt: string | null // dernière relance (étape 6)
   createdAt: string
 }
 
@@ -50,6 +51,7 @@ export const offersApi = {
   setStatus: (id: string, status: OfferStatus) =>
     request<JobOffer>(`/api/offers/${id}/status`, { method: 'PUT', body: { status } }),
   remove: (id: string) => request<void>(`/api/offers/${id}`, { method: 'DELETE' }),
+  followUp: (id: string) => request<JobOffer>(`/api/offers/${id}/follow-up`, { method: 'POST' }),
 }
 
 // Masquée : par moi, ou parce qu'elle exige au moins 2 ans de plus que mon expérience.

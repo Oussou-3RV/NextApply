@@ -3,7 +3,7 @@ import type { Session } from '@supabase/supabase-js'
 import AppShell from './components/AppShell'
 import { useRoute } from './lib/router'
 import { supabase } from './lib/supabase'
-import ComingSoonPage from './pages/ComingSoonPage'
+import DashboardPage from './pages/DashboardPage'
 import LoginPage from './pages/LoginPage'
 import NewPasswordPage from './pages/NewPasswordPage'
 import OfferPage from './pages/OfferPage'
@@ -39,11 +39,7 @@ function App() {
     <AppShell route={route}>
       {route === 'profil' && <ProfilePage />}
       {route === 'offres' && (param ? <OfferPage key={param} id={param} /> : <OffersPage />)}
-      {route === 'apercu' && (
-        <ComingSoonPage title="Aperçu">
-          Le tableau de bord arrive à l'étape 6 : tes candidatures de la semaine et celles à relancer.
-        </ComingSoonPage>
-      )}
+      {route === 'apercu' && <DashboardPage />}
     </AppShell>
   )
 }
