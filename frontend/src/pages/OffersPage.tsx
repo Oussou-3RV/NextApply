@@ -1,10 +1,11 @@
 import { Trash2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import Message from '../components/Message'
 import { errorMessage } from '../lib/api'
 import { formatAppliedDate, formatExperience, isHidden, offersApi } from '../lib/offers'
 import type { JobOffer, OfferList, OfferStatus } from '../lib/offers'
 import { hrefOfOffer } from '../lib/router'
+import { useReloadOnReturn } from '../lib/useReloadOnReturn'
 import '../styles/offres.css'
 
 type Tab = 'toutes' | 'nouvelle' | 'vue' | 'postulee'
@@ -25,21 +26,10 @@ export default function OffersPage() {
   // Calcul des scores manquants : null, ou la progression (« 2 sur 5 »)
   const [scoring, setScoring] = useState<{ done: number; total: number } | null>(null)
 
-  useEffect(() => {
-    const load = () => offersApi.list().then(setData).catch((e: unknown) => setError(errorMessage(e)))
-    load()
-    // Les offres s'ajoutent depuis l'extension, dans un autre onglet : quand je reviens
-    // sur cet onglet, la liste se recharge, sans que j'aie à actualiser la page
-    const onVisible = () => {
-      if (document.visibilityState === 'visible') load()
-    }
-    document.addEventListener('visibilitychange', onVisible)
-    window.addEventListener('focus', onVisible)
-    return () => {
-      document.removeEventListener('visibilitychange', onVisible)
-      window.removeEventListener('focus', onVisible)
-    }
-  }, [])
+  // Rechargée aussi quand je reviens sur l'onglet (offre ajoutée depuis l'extension)
+  const load = useCallback(
+    () => offersApi.list().then(setData).catch((e: unknown) => setError(errorMessage(e))), [])
+  useReloadOnReturn(load)
 
   // Offres ajoutées avant le calcul du score : un appel à l'IA par offre, l'un après
   // l'autre, pour afficher la progression et garder ce qui a déjà réussi en cas d'erreur
